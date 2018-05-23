@@ -1,7 +1,7 @@
 package main
 
 import (
-	"goland.org/crypto/sha3"
+	"golang.org/x/crypto/sha3"
 	"encoding/hex"
 	"encoding/json"
 	"io"
@@ -72,8 +72,8 @@ func replaceChain(newBlocks []Block) {
 
 func run() error {
 	mux := makeMuxRouter()
-	httpAddr := os.Getenv("ADDR")
-	log.Println("Listening on ", os.Getenv("ADDR"))
+	httpAddr := os.Getenv("PORT")
+	log.Println("Listening on ", os.Getenv("PORT"))
 	s := &http.Server{
 		Addr:           ":" + httpAddr,
 		Handler:        mux,
@@ -153,7 +153,7 @@ func main() {
 
 	go func() {
 		t := time.Now()
-		genesisBlock := Block{0, t.String(), 0, "", ""}
+		genesisBlock := Block{0, t.String(), "0", "", ""}
 		spew.Dump(genesisBlock)
 		Blockchain = append(Blockchain, genesisBlock)
 	}()
