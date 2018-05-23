@@ -151,15 +151,35 @@ func generateBlock(oldBlock Block, Data string) Block {
                 hex := fmt.Sprintf("%x", i)
                 newBlock.Nonce = hex
                 if !isHashValid(calculateHash(newBlock), newBlock.Difficulty) {
-                        fmt.Println(calculateHash(newBlock), " do more work!")
+                        fmt.Println(calculateHash(newBlock), " Share found!")
                         time.Sleep(time.Second)
                         continue
                 } else {
-                        fmt.Println(calculateHash(newBlock), " work done!")
+                        fmt.Println(calculateHash(newBlock), " Block mined!")
                         newBlock.Hash = calculateHash(newBlock)
                         break
                 }
 
         }
         return newBlock
+}
+
+func main() {
+        err := godotenv.Load()
+        if err != nil {
+                log.Fatal(err)
+        }   
+
+        go func() {
+                t := time.Now()
+                genesisBlock := Block{}
+                genesisBlock = Block{0, t.String(), 0, calculateHash(genesisBlock), "", difficulty, ""} 
+                spew.Dump(genesisBlock)
+
+                mutex.Lock()
+                Blockchain = append(Blockchain, genesisBlock)
+                mutex.Unlock()
+        }() 
+        log.Fatal(run())
+
 }
